@@ -15,10 +15,9 @@ See L{Failure}.
 import sys
 import linecache
 import inspect
-import opcode
 from io import StringIO
 
-from deferred import _reflect
+from . import _reflect
 
 count = 0
 traceupLength = 4
@@ -135,7 +134,7 @@ class Failure:
     # The opcode of "yield" in Python bytecode. We need this in _findFailure in
     # order to identify whether an exception was thrown by a
     # throwExceptionIntoGenerator.
-    _yieldOpcode = chr(opcode.opmap["YIELD_VALUE"])
+    _yieldOpcode = object() # chr(opcode.opmap["YIELD_VALUE"])
 
     def __init__(self, exc_value=None, exc_type=None, exc_tb=None):
         """
