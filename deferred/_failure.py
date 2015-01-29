@@ -160,6 +160,12 @@ class Failure:
         count = count + 1
         self.count = count
         self.type = self.value = tb = None
+        if exc_value is None:
+            self.type, self.value, tb = sys.exc_info()
+        else:
+            self.type, self.value, tb = exc_type, exc_value, exc_tb
+        return
+
 
         #strings Exceptions/Failures are bad, mmkay?
         if isinstance(exc_value, str) and exc_type is None:
@@ -436,6 +442,7 @@ class Failure:
     def cleanFailure(self):
         """Remove references to other objects, replacing them with strings.
         """
+        return
         self.__dict__ = self.__getstate__()
 
     def getTracebackObject(self):
@@ -478,6 +485,8 @@ class Failure:
             import sys
             file = sys.stderr
         w = file.write
+        w(self.value.info)
+        return
 
         # Preamble
         if detail == 'verbose':
