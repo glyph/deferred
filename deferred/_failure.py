@@ -485,7 +485,18 @@ class Failure:
             import sys
             file = sys.stderr
         w = file.write
-        w(self.value.info)
+        # w(self.value.info)
+        lines = self.value.info.split("\n")
+        w("Traceback (most recent call last):\n")
+        for ref, codeline in zip(lines[1::2], lines[2::2]):
+            moduleLabel, moduleName, lineLabel, lineNumber = ref.split()
+            w('  File "%s", line %s, in %s\n' % (
+                moduleName.replace(".", "/") + ".py", lineNumber,
+                "<?>")
+            )
+            w(codeline + "\n")
+        w("%s: %s\n" % (_reflect.qual(self.type),
+                        _reflect.safe_str(self.value)))
         return
 
         # Preamble
